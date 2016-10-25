@@ -1,0 +1,10 @@
+Aby skompilowac biblioteke do rysowania grafow:
+$ ocamlc -c graphics.cma GraphDrawing.ml
+
+Aby skompilowac program interaktywny (po skompilowaniu biblioteki):
+$ ocamlc -o program graphics.cma str.cma GraphDrawing.cmo program.ml
+
+Dolaczam skrypt "compile.sh", ktory kompiluje odpowiednie pliki.
+Nalezy uruchomic go z dwoma argumentami - pierwszy mowi, czy che-
+my skompilowac bilbioteke, drugi program (za kazdym razem nalezy
+podac 0 lub 1).

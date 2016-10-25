@@ -1,0 +1,172 @@
+   PROGRAM DO RYSOWANIA GRAFOW - GRAPH DRAWER
+   INSTRUKCJA OBSLUGI
+   Autor: Grzegorz Jurdzinski
+
+
+Zakladam dwa podstawowe sposoby uzywania mojego programu -
+uzywanie samej bilioteki napisanej w pliku GraphDrawing.ml
+w innym programie lub uzywanie interaktywnego programu
+zaimplementowanego w pliku program.ml.
+
+   UZYWANIE INTERAKTYWNEGO PROGRAMU
+Podczas uzywania interaktywnego programu wyswietlane sa
+instrukcje mowiace, co w danel chwili moze zrobic uzytko-
+wnik. W plikach przyklad1.txt i przyklad2.txt znajduja sie
+dwa przykladowe zestawy danych dla programu.
+
+   UZYWANIE BIBLIOTEKI DO RYSOWANIA
+Po skompilowaniu pliku GraphDrawing.ml mozna uzywac go jako
+biblioteki (co z reszta robi program interaktywny). Opisy
+wszystkich funkcji znajduja sie w komentarzach w kodzie, tu-
+taj umieszcze ogolny opis.
+Biblioteka zawiera kilka podstawowych modulow:
+ V - wierzcholki
+ E - krawedzie nieskierowane
+ DE - krawedzie skierowane
+ G - grafy proste
+ DG - grafy skierowane
+ GD - rysunki grafow prostych (abstrakcyjna reprezentacja)
+ DGD - rysunki grafow skieowanych (abstrakcyjna reprezentacja)
+Kazdy z tych modulow zawiera podstawowe funkcje do tworzenia
+i edycji struktur danych reprezendujacych odpowiednie dane
+(szczegoly w komentarzach do kodu).
+
+  MODUL V
+Wierzcholek sklada sie z etykiety, koloru i wspolrzednych.
+Modul V zawiera funkcje o nastepujacych typach (typ t re-
+prezentuje wierzcholek):
+ val equal : t -> t -> bool
+ val create : ?lab:label -> ?col:color -> ?coords:coords -> unit -> t
+ val label : t -> label
+ val color : t -> color
+ val coords : t -> coords
+ val set_label : t -> label -> unit
+ val set_color : t -> color -> unit
+ val set_coords : t -> coords -> unit
+W funkcju create domyslne wartosci wygladaja nastepujaco:
+lab - "", col - Graphics.black, coords - (0,0). Poniewaz
+etykieta, kolor i wspolrzedne moga byc czesto zmieniane,
+pamietane sa jako referencja. Dlatego funkcje set_label,
+set_color i set_coords zwracaja wartosc typu unit - zmie-
+niaja one wartosc trzymana w referencji.
+W wierzcholkach pamietane jest niewidoczne dla uzytkownika
+id. To ta wartosc decyduje o rownosci wierzcholkow.
+
+  MODUL E
+Krawedz jest definiowana przez wierzcholki, ktore "laczy",
+etykiete i kolor. Modul E zawieta funkcje o nastepujacych
+typach (typ t reprezentuje krawedz):
+ val equal : t -> t -> bool
+ val create : vertex -> vertex -> ?lab:label -> ?col:color -> unit -> t
+ val label : t -> label
+ val color : t -> color
+ val adj : t -> vertex * vertex
+ val set_label : t -> label -> unit
+ val set_color : t -> color -> unit
+Zarowno kwestia domyslnych wartosci argumentow funkcji
+create jak i sposobu pamietania etykiety i koloru wygla-
+da dokladnie tak samo, jak w przypadku wierzcholkow. Dwie
+krawedzie sa sobie rowne, jesli lacza te same wierzcholki.
+
+  MODUL DE
+Analogiczny do modulu E, jedynie dla krawedzi skierowa-
+nych. Zmieniona jest jedynie funkcja equal.
+
+  MODUL G
+Na graf skada sie lista wierzcholkow i lista krawedzi.
+Modul G zawiera funkcje o nastepujacych typach (typ t
+reprezentuje graf):
+ val mem_v : t -> vertex -> bool
+ val mem_e : t -> edge -> bool
+ val mem_e_v : t -> vertex -> vertex -> bool
+ val find_e : t -> vertex -> vertex -> edge
+ val succ : t -> vertex -> vertex list
+ val pred : t -> vertex -> vertex list
+ val succ_e : t -> vertex -> edge list
+ val pred_e : t -> vertex -> edge list
+ val find_v : t -> (vertex -> bool) -> vertex list
+ val find_e_f : t -> (edge -> bool) -> edge list
+ val empty : t
+ val add_e : t -> edge -> t
+ val add_v : t -> vertex -> t
+ val rem_e : t -> edge -> t
+ val rem_v : t -> vertex -> t
+ val fold_v : (vertex -> 'a -> 'a) -> t -> 'a -> 'a
+ val fold_e : (edge -> 'a -> 'a) -> t -> 'a -> 'a
+ val fold_v_2 : (vertex -> 'a -> 'b -> 'b) -> t -> 'a list -> 'b -> 'b
+ val fold_e_2 : (edge -> 'a -> 'b -> 'b) -> t -> 'a list -> 'b -> 'b
+ val iter_v : (vertex -> unit) -> t -> unit
+ val iter_e : (edge -> unit) -> t -> unit
+ val iter_v_2 : (vertex -> 'a -> unit) -> t -> 'a list -> unit
+ val iter_e_2 : (edge -> 'a -> unit) -> t -> 'a list -> unit
+ val num_v : t -> int
+ val num_e : t -> int
+ val directed : t -> bool
+
+  MODUL DG
+Analogiczny do modulu G, jedynie dla grafiw skierowa-
+nych.
+
+  MODUL GD
+Zdefiniowany tu typ t odpowiada abstrakcyjnej preprezenta-
+cji rysunku grafu. Zawieta nastepujace skladowe:
+ graph - graf
+ r - promien okregu, na ktorym domyslnie rozstawiane sa wierzcholki
+ vertex_r - promien okregu reprezentujacego wierzcholki
+ filling - czy wierzcholki maja byc rysowane jako kola (true) czy okregi (false)
+ line_width - glubosc rysowanych lini (l. pikseli)
+ font - rozmiar czcionki (dotyczy etykiet)
+Modul implementuje funkcje o nastepujacych typach:
+ val create : graph -> ?v_r:int -> ?r:int -> ?size:(int * int) -> ?filling:bool
+    -> ?line_width:int -> ?font:int -> ?set_coords:bool -> unit -> t
+ val draw : t -> unit
+ val redraw : t -> unit
+ val clear : unit -> unit
+ val reset : t -> unit
+ val close_window : unit -> unit
+ val change_vertex_radius : t -> int -> t
+ val change_graph : t -> graph -> t
+ val change_filling : t -> bool -> t
+ val change_line_width : t -> int -> t
+ val change_font_size : t -> int -> t
+ val change_window_size : int * int -> unit
+ val move_v_to : t -> vertex -> V.coords -> unit
+ val move_v_by : t -> vertex -> int * int -> unit
+ val change_v_color : t -> vertex -> V.color -> unit
+ val change_e_color : t -> edge -> E.color -> unit
+ val change_v_label : t -> vertex -> V.label -> unit
+ val change_e_label : t -> edge -> E.label -> unit
+ val add_v : t -> vertex -> t
+ val add_e : t -> edge -> t
+ val rem_v : t -> vertex -> t
+ val rem_e : t -> edge -> t
+ val get_graph : t -> graph
+ val get_r : t -> int
+ val get_vertex_r : t -> int
+ val get_filling : t -> bool
+ val get_line_width : t -> int
+ val get_font : t -> int
+ val find_v_by_label : t -> V.label -> V.t list
+ val find_e_by_label : t -> E.label -> E.t list
+ val find_e_by_vertices : t -> V.t -> V.t -> E.t
+Domyslne wartosci argumentow funkcji create wygladaja na-
+stepujaco: v_r - 10, r - -1 (jesli ta wartosc sie nie zmie-
+ni, to zostanie dopasowana do rozmiaru okna), size - (900,
+700), filling - false, line_width - 2, font - 12,
+set_coords - true. v_r to promien okregu reprezentujacego
+wierzcholek, naromiast r to promien okregu, na ktorym roz-
+kladane sa wierzcholki. set_coords mowi, czy wierzcholki
+maja zostac rozlozone na okregu.
+
+  MODUL DGD
+Analogiczny do modulu GD, tylko dla grafow skierowanych.
+
+Aby uzywac biblioteki, nalezy ja skompilowac i plik
+GraphDrawing.cmo umiescic w katalogu, w ktorym znajdowac
+sie ma kod programu korzystajacego z biblioteki. W tym ko-
+dzie nalezy umiescic nastepujaca linie:
+#load "GraphDrawing.cmo"
+(jesli chcemy uzywac go bez kompilacji). W przypadku pro-
+gramu kompilowanego nalezy przy kompilacji zamiescic plik
+biblioteki, np.:
+$ ocamlc -o program GraphDrawing.cmo program.ml
