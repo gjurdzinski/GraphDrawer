@@ -4,7 +4,6 @@
 *)
 
 (* -------------------- MODULY ABSTRAKCYJNEJ REPREZENTACJI GRAFOW -------------------- *)
-(* jak na liscie 8, modyfikacje na tyle oczywiste, ze nie trzeba tlumaczyc *)
 module type VERTEX =
 sig
   type t
@@ -22,7 +21,6 @@ sig
   val set_coords : t -> coords -> unit
 end;;
 
-(* jak na liscie 8, modyfikacje na tyle oczywiste, ze nie trzeba tlumaczyc *)
 module type EDGE =
 sig
   type t
@@ -39,7 +37,6 @@ sig
   val set_color : t -> color -> unit
 end;;
 
-(* jak na liscie 8, modyfikacje na tyle oczywiste, ze nie trzeba tlumaczyc *)
 module type GRAPH =
 sig
   (* typ reprezentacji grafu *)
