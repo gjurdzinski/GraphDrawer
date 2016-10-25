@@ -1,8 +1,0 @@
-PROGRAM DO RYSOWANIA GRAFÓW
-
-Opis: W ramach projektu zrealizuję program pozwalający użytkownikowi rysowanie zdefiniowanych przez siebie grafów oraz ich edycję. Grafy będą rysowane oczywiście graficznie, edytować będzie można zarówno sam graf jak i jego rysunek. Edycja będzie się odbywała poprzez komendy tekstowe.
-
-Funkcjonalności:
-- definiowanie i edycja grafu (dodawanie i usuwanie wierzchołków, krawędzi, etykiet itp.)
-- zmiana rysunku grafu (poprzez przesuwanie wierzchołków komendami)
-- kolorawanie grafu i nadawanie etykiet (wierzchołkom i krawędziom)
