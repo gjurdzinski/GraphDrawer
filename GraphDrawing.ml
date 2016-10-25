@@ -1,5 +1,5 @@
 (*
-  Bibioteka do rysowania grafow. Projekt na programowanie funkcyjne 2015/2016.
+  Bibioteka do rysowania grafow.
   Grzegorz Jurdzinski, II UWr 2016
 *)
 
